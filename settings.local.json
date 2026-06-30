@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"D:\\\\0. AI\\\\Claude\" && ls -la)",
+      "PowerShell(\\(Get-Content \"D:\\\\0. AI\\\\Claude\\\\Allocation Confirm ver2\\\\allocation_style.css\"\\).Count; \\(Get-Content \"D:\\\\0. AI\\\\Claude\\\\Allocation Confirm ver2\\\\allocation_engine.js\"\\).Count; \\(Get-Content \"D:\\\\0. AI\\\\Claude\\\\Allocation Confirm ver2\\\\allocation_ui.js\"\\).Count; \\(Get-Content \"D:\\\\0. AI\\\\Claude\\\\Allocation Confirm ver2\\\\allocation_dashboard.html\"\\).Count)",
+      "Bash(mv \"D:/0. AI/Claude/Allocation Confirm ver2\" \"D:/0. AI/Claude/Allocation Confirm Dashboard\" && echo \"완료\")",
+      "PowerShell(Rename-Item -Path \"D:\\\\0. AI\\\\Claude\\\\Allocation Confirm ver2\" -NewName \"Allocation Confirm Dashboard\" -ErrorAction Stop)"
+    ]
+  }
+}

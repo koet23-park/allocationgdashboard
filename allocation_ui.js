@@ -508,14 +508,19 @@ function buildCategorySheet(wb, category) {
   const blankRow = ws.addRow([]);
   blankRow.height = 18;
 
-  const h2 = ws.addRow(['Market Name', 'Model', 'Storage']);
+  const detailCols = ['Market Name', 'Model', 'Storage', 'IMEI', 'Grade', 'Battery Health', 'B2B App. Y/N', 'Allocation Result'];
+  const h2 = ws.addRow(detailCols);
   h2.height = 18;
-  styleCatHeaderRow(h2, ['center', 'center', 'center']);
+  styleCatHeaderRow(h2, detailCols.map(() => 'center'));
 
   recs.forEach((r, i) => {
-    const row = ws.addRow([r.marketName, r.model, r.storage]);
+    const row = ws.addRow([r.marketName, r.model, r.storage, r.imei, r.grade, r.batteryHealth, r.b2bApp, r.allocationResult]);
     row.height = 18;
-    styleCatDataRow(row, i % 2 === 0 ? 'FFFFFF' : 'F9F9F9', ['left', 'left', 'left']);
+    styleCatDataRow(row, i % 2 === 0 ? 'FFFFFF' : 'F9F9F9', ['left', 'left', 'left', 'left', 'left', 'left', 'left', 'center']);
+    row.getCell(4).numFmt = '@'; // IMEI as text (avoid scientific notation)
+    const resultCell = row.getCell(8);
+    resultCell.font = { name: 'Segoe UI', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    resultCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E6B42' } };
   });
 }
 

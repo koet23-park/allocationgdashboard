@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMEI Product Allocation Dashboard v2</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<link rel="stylesheet" href="allocation_style.css?v=3">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h2>Allocation v2</h2>
+    <p>IMEI Product Allocation System</p>
+  </div>
+  <div class="page-switcher">
+    <button class="page-tab active" id="page-tab-dashboard" onclick="switchPage('dashboard')"><span class="nav-icon">📊</span>Dashboard</button>
+    <button class="page-tab" id="page-tab-rules" onclick="switchPage('rules')"><span class="nav-icon">⚙️</span>Rules</button>
+  </div>
+  <div class="sidebar-nav" id="dashboard-nav">
+    <div class="nav-item active" onclick="scrollToSection('upload-section')"><span class="nav-icon">📁</span>Data Upload</div>
+    <div class="nav-item" onclick="scrollToSection('filter-section')"><span class="nav-icon">📋</span>Allocation Results</div>
+    <div class="nav-item" onclick="scrollToSection('cards-section')"><span class="nav-icon">📊</span>Summary</div>
+    <div class="nav-item" onclick="scrollToSection('model-section')"><span class="nav-icon">📱</span>By Model</div>
+    <div class="nav-item" onclick="scrollToSection('charts-section')"><span class="nav-icon">🍕</span>Charts</div>
+    <div class="nav-item" onclick="scrollToSection('log-section')"><span class="nav-icon">📝</span>Processing Log</div>
+  </div>
+  <div class="sidebar-footer">
+    IMEI Allocation Engine v2.0<br>© 2026 Enterprise Solution
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div>
+      <div class="topbar-title">IMEI Product Allocation Dashboard</div>
+      <div class="topbar-meta">Last processed: <span id="timestamp">—</span></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn btn-primary tip" data-tip="Export result as Excel (.xlsx)" id="btn-export-excel" disabled onclick="exportExcel()" style="background:#217346;border-color:#1a5c38;">⬇ Excel</button>
+      <button class="btn btn-secondary tip" data-tip="Export result as CSV" id="btn-export-csv" disabled onclick="exportCSV()">⬇ CSV</button>
+      <button class="btn btn-secondary tip" data-tip="Export result as JSON" id="btn-export-json" disabled onclick="exportJSON()">⬇ JSON</button>
+    </div>
+  </div>
+
+  <div id="content">
+
+  <div id="page-dashboard" class="page-view active">
+
+    <!-- UPLOAD -->
+    <section id="upload-section">
+      <div class="section-header">
+        <h2>📁 Data Upload</h2>
+      </div>
+      <div id="upload-body">
+        <div class="upload-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json">
+          <div class="upload-icon">📂</div>
+          <h3>Drag & drop an Excel file here, or click to browse</h3>
+          <p>Supported formats: .xlsx, .xls, .csv, .json &nbsp;|&nbsp; IMEI, Market Name, Grade columns auto-detected</p>
+        </div>
+
+        <!-- Samsung DRM bypass -->
+        <div style="margin-top:12px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="font-size:.82rem;color:var(--text2);flex:1;min-width:200px;">
+              <strong style="color:var(--accent);">🔒 For Samsung DRM-protected files</strong><br>
+              <span style="color:var(--text3);">Open file in Excel → Ctrl+A (select all) → Ctrl+C (copy) → click button below</span>
+            </div>
+            <button class="btn btn-success" onclick="pasteFromClipboard()" id="btn-paste">
+              📋 Paste from Clipboard
+            </button>
+          </div>
+        </div>
+
+        <div id="run-bar">
+          <div id="file-label">No file selected</div>
+          <button class="btn btn-primary" id="btn-run" disabled onclick="runAllocation()">▶ Run Final Confirmation</button>
+          <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">↺ Reset</button>
+        </div>
+        <div id="progress-wrap"><div id="progress-bar"></div></div>
+      </div>
+    </section>
+
+    <!-- ALLOCATION RESULTS (primary) -->
+    <section id="filter-section" style="margin-top:0;">
+      <div class="result-tabs" id="result-tabs">
+        <div class="result-tab tab-all active" onclick="setTabFilter('')" id="tab-all">
+          <div class="tab-label">All</div>
+          <div class="tab-count" id="tab-cnt-all">—</div>
+          <div class="tab-pct" id="tab-pct-all">100%</div>
+        </div>
+        <div class="result-tab tab-crn" onclick="setTabFilter('CRN')" id="tab-crn">
+          <div class="tab-label">CRN</div>
+          <div class="tab-count" id="tab-cnt-crn">—</div>
+          <div class="tab-pct" id="tab-pct-crn">—</div>
+        </div>
+        <div class="result-tab tab-refurbish" onclick="setTabFilter('Refurbish')" id="tab-refurbish">
+          <div class="tab-label">Refurbish</div>
+          <div class="tab-count" id="tab-cnt-refurbish">—</div>
+          <div class="tab-pct" id="tab-pct-refurbish">—</div>
+        </div>
+        <div class="result-tab tab-auction" onclick="setTabFilter('Auction')" id="tab-auction">
+          <div class="tab-label">Auction</div>
+          <div class="tab-count" id="tab-cnt-auction">—</div>
+          <div class="tab-pct" id="tab-pct-auction">—</div>
+        </div>
+        <div class="result-tab tab-recycle" onclick="setTabFilter('Recycle')" id="tab-recycle">
+          <div class="tab-label">Recycle</div>
+          <div class="tab-count" id="tab-cnt-recycle">—</div>
+          <div class="tab-pct" id="tab-pct-recycle">—</div>
+        </div>
+        <div class="result-tab tab-excluded" onclick="setTabFilter('Excluded')" id="tab-excluded">
+          <div class="tab-label">Excluded</div>
+          <div class="tab-count" id="tab-cnt-excluded">—</div>
+          <div class="tab-pct" id="tab-pct-excluded">—</div>
+        </div>
+        <div class="result-tab tab-unclassified" onclick="setTabFilter('Unclassified')" id="tab-unclassified">
+          <div class="tab-label">Unclassified</div>
+          <div class="tab-count" id="tab-cnt-unclassified">—</div>
+          <div class="tab-pct" id="tab-pct-unclassified">—</div>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="search-input" placeholder="🔍  Search IMEI, Market Name, Model..." oninput="applyFilters()">
+        <select id="filter-grade" onchange="applyFilters()">
+          <option value="">All Grades</option>
+          <option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option>
+          <option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option>
+          <option value="C+">C+</option><option value="C">C</option><option value="C-">C-</option>
+          <option value="D+">D+</option><option value="D">D</option><option value="D-">D-</option>
+          <option value="E">E</option>
+        </select>
+        <select id="filter-b2b" onchange="applyFilters()">
+          <option value="">All B2B</option>
+          <option value="Y">B2B = Y</option>
+          <option value="N">B2B = N</option>
+        </select>
+        <select id="filter-type" onchange="applyFilters()">
+          <option value="">All Types</option>
+          <option value="Bar">Bar (S/A)</option>
+          <option value="FF">FF (Fold/Flip)</option>
+        </select>
+        <button id="clear-filter" onclick="clearFilters()">✕ Clear</button>
+        <span id="result-count">—</span>
+      </div>
+    </section>
+
+    <section id="table-section" style="margin-top:0;">
+      <div class="section-header">
+        <h2>📋 Allocation Results by IMEI</h2>
+      </div>
+      <div id="table-body">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <h3>Allocation Result Table</h3>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn" id="btn-dl-excel" disabled onclick="exportExcel()"
+                style="background:#217346;color:#fff;font-size:.82rem;padding:7px 16px;border-radius:7px;font-weight:700;">
+                ⬇ Download Excel
+              </button>
+              <select id="page-size" onchange="changePageSize()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:.78rem;">
+                <option value="50">50 rows</option>
+                <option value="100">100 rows</option>
+                <option value="200">200 rows</option>
+                <option value="500">500 rows</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table id="data-table">
+              <thead>
+                <tr>
+                  <th onclick="sortBy('idx')">#<span class="sort-icon" id="sort-idx">↕</span></th>
+                  <th onclick="sortBy('allocationResult')" style="color:var(--accent);font-weight:700;">Result<span class="sort-icon" id="sort-allocationResult">↕</span></th>
+                  <th onclick="sortBy('imei')">IMEI<span class="sort-icon" id="sort-imei">↕</span></th>
+                  <th onclick="sortBy('marketName')">Market Name<span class="sort-icon" id="sort-marketName">↕</span></th>
+                  <th onclick="sortBy('model')">Model<span class="sort-icon" id="sort-model">↕</span></th>
+                  <th onclick="sortBy('grade')">Grade<span class="sort-icon" id="sort-grade">↕</span></th>
+                  <th onclick="sortBy('b2bApp')">B2B<span class="sort-icon" id="sort-b2bApp">↕</span></th>
+                  <th onclick="sortBy('modelType')">Type<span class="sort-icon" id="sort-modelType">↕</span></th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody id="table-body-rows">
+                <tr><td colspan="9"><div class="empty-state"><div class="icon">📂</div><p>Upload an Excel file and run Final Confirmation.</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="page-info">0 records</span>
+            <div class="page-btns" id="page-btns"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALLOCATION SUMMARY -->
+    <section id="cards-section" style="margin-top:24px;">
+      <div class="section-header">
+        <h2>📊 Allocation Summary</h2>
+      </div>
+      <div id="cards-body">
+        <div class="cards-grid">
+          <div class="stat-card card-total">
+            <div class="card-label">Total</div>
+            <div class="card-value" id="cnt-total">—</div>
+            <div class="card-pct" id="pct-total">All records</div>
+          </div>
+          <div class="stat-card card-crn">
+            <div class="card-label">CRN</div>
+            <div class="card-value" id="cnt-crn">—</div>
+            <div class="card-pct" id="pct-crn">—</div>
+          </div>
+          <div class="stat-card card-refurbish">
+            <div class="card-label">Refurbish</div>
+            <div class="card-value" id="cnt-refurbish">—</div>
+            <div class="card-pct" id="pct-refurbish">—</div>
+          </div>
+          <div class="stat-card card-auction">
+            <div class="card-label">Auction</div>
+            <div class="card-value" id="cnt-auction">—</div>
+            <div class="card-pct" id="pct-auction">—</div>
+          </div>
+          <div class="stat-card card-recycle">
+            <div class="card-label">Recycle</div>
+            <div class="card-value" id="cnt-recycle">—</div>
+            <div class="card-pct" id="pct-recycle">—</div>
+          </div>
+          <div class="stat-card card-excluded">
+            <div class="card-label">Excluded</div>
+            <div class="card-value" id="cnt-excluded">—</div>
+            <div class="card-pct" id="pct-excluded">—</div>
+          </div>
+          <div class="stat-card card-unclassified">
+            <div class="card-label">Unclassified</div>
+            <div class="card-value" id="cnt-unclassified">—</div>
+            <div class="card-pct" id="pct-unclassified">—</div>
+          </div>
+        </div>
+        <div class="pbar-wrap" style="margin-top:14px;">
+          <div class="pbar-card">
+            <h3>Category Distribution</h3>
+            <div id="pbar-container"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODEL TABLE -->
+    <section id="model-section" style="margin-top:0;">
+      <div class="section-header">
+        <h2>📱 Allocation by Model (Top 20)</h2>
+      </div>
+      <div id="model-body">
+        <div class="table-card">
+          <div class="table-scroll">
+            <table id="model-table">
+              <thead>
+                <tr>
+                  <th>Market Name</th>
+                  <th style="color:var(--crn)">CRN</th>
+                  <th style="color:var(--refurbish)">Refurbish</th>
+                  <th style="color:var(--auction)">Auction</th>
+                  <th style="color:var(--recycle)">Recycle</th>
+                  <th style="color:var(--excluded)">Excluded</th>
+                  <th style="color:var(--unclassified)">Unclassified</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="model-table-body">
+                <tr><td colspan="8"><div class="empty-state"><div class="icon">📱</div><p>No data available.</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHARTS -->
+    <section id="charts-section" style="margin-top:0;">
+      <div class="section-header">
+        <h2>📊 Distribution Charts</h2>
+      </div>
+      <div id="charts-body">
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Allocation Ratio (Pie)</h3>
+            <div class="chart-wrap"><canvas id="pie-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Allocation Ratio (Doughnut)</h3>
+            <div class="chart-wrap"><canvas id="doughnut-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Allocation by Model (Bar)</h3>
+            <div class="chart-wrap"><canvas id="bar-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Grade Distribution</h3>
+            <div class="chart-wrap"><canvas id="grade-chart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOG -->
+    <section id="log-section" style="margin-top:0;">
+      <div class="section-header">
+        <h2>📝 Processing Log</h2>
+      </div>
+      <div id="log-body">
+        <div class="log-card">
+          <div class="log-toolbar">
+            <h3>Validation History</h3>
+            <button class="btn btn-secondary" onclick="clearLog()" style="padding:4px 12px;font-size:.75rem;">Clear Log</button>
+          </div>
+          <div class="log-body" id="log-panel">
+            <span class="log-info">[System] Dashboard initialized. Please upload a file.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page-dashboard -->
+
+  <div id="page-rules" class="page-view">
+    <section id="rule-section">
+      <div class="section-header">
+        <h2>⚙️ Rule Management</h2>
+      </div>
+      <div id="rule-body">
+        <p class="rule-section-desc">Manage the model-grade rules used for CRN / Refurbish / Recycle classification. After saving, run "Run Final Confirmation" again to apply the new rules immediately.</p>
+
+        <div class="rule-card">
+          <div class="rule-card-header">
+            <div class="rule-card-title"><span class="rule-dot cat-crn"></span>CRN Eligible Models</div>
+            <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('crn')">+ Add Row</button>
+          </div>
+          <p class="rule-card-desc">Assign CRN-eligible grades for each model prefix. Toggle grades using the buttons.</p>
+          <div class="table-scroll rule-table-scroll">
+            <table class="rule-table">
+              <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>
+              <tbody id="rule-tbody-crn"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-card-header">
+            <div class="rule-card-title"><span class="rule-dot cat-refurbish"></span>Refurbish Eligible Models</div>
+            <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('refurbish')">+ Add Row</button>
+          </div>
+          <p class="rule-card-desc">Define the models and grades eligible for Refurbish.</p>
+          <div class="table-scroll rule-table-scroll">
+            <table class="rule-table">
+              <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>
+              <tbody id="rule-tbody-refurbish"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-card-header">
+            <div class="rule-card-title"><span class="rule-dot cat-recycle"></span>Recycle Eligible Models</div>
+            <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('recycle')">+ Add Row</button>
+          </div>
+          <p class="rule-card-desc">Define the models and grades eligible for Recycle.</p>
+          <div class="table-scroll rule-table-scroll">
+            <table class="rule-table">
+              <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>
+              <tbody id="rule-tbody-recycle"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="rule-footer-bar">
+          <span class="rule-footer-hint">Save your changes if you've made any.</span>
+          <div class="rule-footer-actions">
+            <input type="file" id="rule-import-input" accept=".json" style="display:none" onchange="importRulesJSON(this)">
+            <button class="btn btn-secondary" onclick="exportRulesJSON()">⬇ Export JSON</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('rule-import-input').click()">⬆ Import JSON</button>
+            <button class="btn btn-secondary" onclick="resetRulesToDefault()">↺ Restore Defaults</button>
+            <button class="btn btn-primary" id="btn-save-rules" onclick="saveRules()">💾 Save Rules</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- /page-rules -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script src="allocation_engine.js?v=3"></script>
+<script src="allocation_ui.js?v=3"></script>
+</body>
+</html>

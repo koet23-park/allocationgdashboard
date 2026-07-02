@@ -1,0 +1,13 @@
+# Claude Code session/tooling files (not part of the shipped app)
+.claude/
+
+# Real business data — must never be published (IMEI / customer records)
+Data 변환/
+
+# Unrelated working artifacts from other tasks in this folder
+_analysis.txt
+Allocation_Confirm_Dashboard_Flow.pptx
+
+# OS junk
+Thumbs.db
+.DS_Store

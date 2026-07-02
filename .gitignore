@@ -1,8 +1,11 @@
 # Claude Code session/tooling files (not part of the shipped app)
 .claude/
 
-# Real business data — must never be published (IMEI / customer records)
-Data 변환/
+# Real business data — must never be published (IMEI / customer records).
+# The conversion script itself (extract_to_json.py) is safe/tracked.
+Data 변환/*.xlsx
+Data 변환/*.xls
+Data 변환/*.json
 
 # Unrelated working artifacts from other tasks in this folder
 _analysis.txt

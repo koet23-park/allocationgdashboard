@@ -565,7 +565,7 @@ function parseCSV(file) {
     tryRead('utf-8').then(text => {
       try {
         // 깨진 문자가 많으면 EUC-KR 재시도
-        const garbled = (text.match(/�/g) || []).length;
+        const garbled = (text.match(/ /g) || []).length;
         if (garbled > 10) return tryRead('euc-kr');
         return text;
       } catch(e) { return tryRead('euc-kr'); }

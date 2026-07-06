@@ -14,14 +14,21 @@ const state = {
   charts: {},
   nModels: { S:null, A:null, Z:null },
   ruleConfig: null, // set below via loadRuleConfig()
+  effectiveRuleTables: null, // set by buildEffectiveRuleTables() — manual rows + auto-generated Bar/S rows
 };
 
 // ============================================================
 // RULE MANAGEMENT — 모델별 등급 허용 테이블 (CRN / Refurbish / Recycle)
 // 대시보드의 "규칙 관리" 탭에서 직접 편집 → 저장 → 다음 Run Final
 // Confirmation부터 즉시 반영된다. (localStorage에 영속화)
+//
+// Bar/S 시리즈(Galaxy S)는 여기 표에 고정 항목으로 넣지 않는다 — 매번 업로드된
+// 데이터에서 감지되는 N-Model을 기준으로 generateBarSeriesRows()가 자동
+// 계산한다 (v2에서 변경: 이전에는 S23~S25 등을 하드코딩해서 신규 세대
+// 출시 때마다(예: S26) 수동으로 표를 고쳐야 했고, 고치지 않으면 최신 세대가
+// 누락되는 문제가 있었다). Z(Fold/Flip)·Note20 등 예외 모델만 수동 표에 남는다.
 // ============================================================
-const RULE_STORAGE_KEY = 'allocationRuleConfig_v1';
+const RULE_STORAGE_KEY = 'allocationRuleConfig_v2';
 const GRADE_TOGGLES = ['A+','A','B+','B','C+','C','D+','D','E'];
 
 function cloneDefaultRuleConfig() {
@@ -30,18 +37,10 @@ function cloneDefaultRuleConfig() {
 
 const DEFAULT_RULE_CONFIG = {
   crn: [
-    'GALAXY S23','GALAXY S23 FE','GALAXY S23+','GALAXY S23 ULTRA',
-    'GALAXY S24','GALAXY S24 FE','GALAXY S24+','GALAXY S24 ULTRA',
-    'GALAXY S25','GALAXY S25+','GALAXY S25 ULTRA',
     'GALAXY Z FLIP5','GALAXY Z FLIP6','GALAXY Z FLIP7',
     'GALAXY Z FOLD5','GALAXY Z FOLD6','GALAXY Z FOLD7',
   ].map(prefix => ({ prefix, grades: ['A+','A','B+','B','C+','C','D+','D'] })),
   refurbish: [
-    'GALAXY S21','GALAXY S21+','GALAXY S21 ULTRA',
-    'GALAXY S22','GALAXY S22+','GALAXY S22 ULTRA',
-    'GALAXY S23','GALAXY S23+','GALAXY S23 ULTRA',
-    'GALAXY S24','GALAXY S24+','GALAXY S24 ULTRA',
-    'GALAXY S25','GALAXY S25+','GALAXY S25 ULTRA',
     'GALAXY NOTE20','GALAXY NOTE20 ULTRA',
     'GALAXY Z FLIP5','GALAXY Z FLIP6','GALAXY Z FLIP7',
     'GALAXY Z FOLD5','GALAXY Z FOLD6','GALAXY Z FOLD7',
@@ -50,8 +49,59 @@ const DEFAULT_RULE_CONFIG = {
     'GALAXY S10','GALAXY S20','GALAXY S21','GALAXY S22','GALAXY S23','GALAXY S24','GALAXY S25',
     'GALAXY NOTE10','GALAXY NOTE20','GALAXY Z FLIP','GALAXY Z FOLD',
     'GALAXY A52','GALAXY A53','GALAXY A54',
-  ].map(prefix => ({ prefix, grades: [...GRADE_TOGGLES] })),
+  ].map(prefix => ({ prefix, grades: ['E'] })),
 };
+
+// ── Bar/S 시리즈 CRN·Refurbish 자동 생성 ─────────────────────────────
+// N = 업로드된 데이터에서 감지된 최신 Galaxy S 세대 번호 (discoverNModels 참고)
+const BAR_S_CRN_OFFSETS = [-1, -2, -3];             // N-1 ~ N-3
+const BAR_S_CRN_SUFFIXES = ['', ' FE', '+', ' ULTRA'];
+const BAR_S_CRN_GRADES = ['A+','A','B+','B','C+','C','D+','D'];
+
+const BAR_S_REFURBISH_OFFSETS = [0, -1, -2, -3, -4, -5]; // N ~ N-5
+const BAR_S_REFURBISH_SUFFIXES = ['', '+', ' ULTRA'];
+const BAR_S_REFURBISH_GRADES = ['A+','B+','C+'];
+
+function generateBarSeriesRows(nModel, offsets, suffixes, grades) {
+  if (!nModel) return [];
+  const rows = [];
+  for (const off of offsets) {
+    const gen = nModel + off;
+    if (gen <= 0) continue;
+    for (const suf of suffixes) {
+      rows.push({ prefix: `GALAXY S${gen}${suf}`, grades: [...grades] });
+    }
+  }
+  return rows;
+}
+
+// 수동 표(state.ruleConfig)의 사용자 지정 행을 우선하고, 그 뒤에 자동 계산된
+// Bar/S 행을 덧붙인다 — matchRuleTable()은 동일 길이 prefix가 여러 개 있으면
+// 배열에서 먼저 나온 쪽을 채택하므로, 사용자가 특정 S 세대를 직접 등록해
+// 덮어쓰고 싶을 때도 그대로 반영된다.
+function getEffectiveRuleTable(catKey) {
+  const cfg = state.ruleConfig || DEFAULT_RULE_CONFIG;
+  const manualRows = cfg[catKey] || [];
+  if (catKey === 'crn') {
+    return [...manualRows, ...generateBarSeriesRows(state.nModels.S, BAR_S_CRN_OFFSETS, BAR_S_CRN_SUFFIXES, BAR_S_CRN_GRADES)];
+  }
+  if (catKey === 'refurbish') {
+    return [...manualRows, ...generateBarSeriesRows(state.nModels.S, BAR_S_REFURBISH_OFFSETS, BAR_S_REFURBISH_SUFFIXES, BAR_S_REFURBISH_GRADES)];
+  }
+  return manualRows; // recycle: 자동 생성 없이 수동 표 그대로 사용
+}
+
+// discoverNModels() 이후 한 번 호출해 CRN/Refurbish/Recycle 매칭에 쓸 표를
+// 캐싱한다 (레코드마다 매번 다시 만들지 않기 위함). Rule 탭 Excel 시트도
+// 이 값을 그대로 읽어 실제 적용된 규칙을 보여준다.
+function buildEffectiveRuleTables() {
+  state.effectiveRuleTables = {
+    crn: getEffectiveRuleTable('crn'),
+    refurbish: getEffectiveRuleTable('refurbish'),
+    recycle: getEffectiveRuleTable('recycle'),
+  };
+  return state.effectiveRuleTables;
+}
 
 function loadRuleConfig() {
   try {
@@ -73,19 +123,28 @@ function saveRuleConfigToStorage(cfg) {
 
 state.ruleConfig = loadRuleConfig();
 
+// 하이픈/언더스코어를 공백으로 통일해 "Galaxy-A53 5G" 같은 원본 데이터가
+// Rule Management 표의 "GALAXY A53"(공백) 항목과도 매칭되게 한다 — 실제
+// 데이터는 A 시리즈에서 하이픈("Galaxy-A52s 5G")을 쓰는 경우가 많아, 정규화
+// 없이 startsWith만 쓰면 표에 등록해도 절대 매칭되지 않는 문제가 있었다.
+function normalizeModelPrefix(s) {
+  return String(s || '').trim().toUpperCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ');
+}
+
 // 시장명(marketName)에 대해 table 내에서 가장 길게(가장 구체적으로) 일치하는
 // prefix row를 찾고, 그 row의 grades에 rec의 원본 등급이 포함되는지 확인한다.
 function matchRuleTable(table, marketName, grade) {
-  const target = String(marketName || '').trim().toUpperCase();
+  const target = normalizeModelPrefix(marketName);
   const g = String(grade || '').trim().toUpperCase();
   if (!target || !Array.isArray(table)) return { pass: false };
 
   let best = null;
   for (const row of table) {
-    const p = String(row.prefix || '').trim().toUpperCase();
+    const rawPrefix = String(row.prefix || '').trim().toUpperCase();
+    const p = normalizeModelPrefix(rawPrefix);
     if (!p) continue;
-    if (target.startsWith(p) && (!best || p.length > best.prefix.length)) {
-      best = { prefix: p, grades: row.grades || [] };
+    if (target.startsWith(p) && (!best || p.length > best.normLen)) {
+      best = { prefix: rawPrefix, normLen: p.length, grades: row.grades || [] };
     }
   }
   if (!best) return { pass: false };
@@ -193,23 +252,30 @@ function applyRules(rec) {
 }
 
 function checkCRN(rec) {
-  const cfg = state.ruleConfig || DEFAULT_RULE_CONFIG;
-  const m = matchRuleTable(cfg.crn, rec.marketName, rec.grade);
+  const table = (state.effectiveRuleTables || buildEffectiveRuleTables()).crn;
+  const m = matchRuleTable(table, rec.marketName, rec.grade);
   if (m.pass) return { pass:true, reason:`CRN: '${m.matchedPrefix}' model, Grade ${rec.grade}` };
   return { pass:false };
 }
 
 function checkRefurbish(rec) {
-  const cfg = state.ruleConfig || DEFAULT_RULE_CONFIG;
-  const m = matchRuleTable(cfg.refurbish, rec.marketName, rec.grade);
+  const table = (state.effectiveRuleTables || buildEffectiveRuleTables()).refurbish;
+  const m = matchRuleTable(table, rec.marketName, rec.grade);
   if (m.pass) return { pass:true, reason:`Refurbish: '${m.matchedPrefix}' model, Grade ${rec.grade}` };
   return { pass:false };
 }
 
+// Recycle은 Python 엔진과 동일하게 "모델과 무관하게 정규화 등급이 E이면
+// 무조건 Recycle"을 기본 규칙으로 삼는다 (CRN/Refurbish 미해당 시). 아래
+// Recycle 표는 그 기본 규칙에 대한 "추가 예외"용이다 — 표에 없는 모델이라도
+// E등급이면 Recycle로 잡히고, 표는 특정 모델에 E 외의 등급도 Recycle시키고
+// 싶을 때만 사용한다. (예전엔 표에 등록된 모델만 Recycle이 가능해서, 표에
+// 없는 모델은 E등급이어도 전부 Auction으로 새는 문제가 있었다.)
 function checkRecycle(rec) {
-  const cfg = state.ruleConfig || DEFAULT_RULE_CONFIG;
-  const m = matchRuleTable(cfg.recycle, rec.marketName, rec.grade);
+  const table = (state.effectiveRuleTables || buildEffectiveRuleTables()).recycle;
+  const m = matchRuleTable(table, rec.marketName, rec.grade);
   if (m.pass) return { pass:true, reason:`Recycle: '${m.matchedPrefix}' model, Grade ${rec.grade}` };
+  if (rec.normalizedGrade === 'E') return { pass:true, reason:'Recycle: Grade E (model-agnostic default rule)' };
   return { pass:false };
 }
 
@@ -637,6 +703,7 @@ async function runAllocation() {
     setProgress(50);
 
     discoverNModels(partials);
+    buildEffectiveRuleTables();
     setProgress(60);
 
     let batchSize = 500;

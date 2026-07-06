@@ -343,6 +343,7 @@
             <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('crn')">+ Add Row</button>
           </div>
           <p class="rule-card-desc">Assign CRN-eligible grades for each model prefix. Toggle grades using the buttons.</p>
+          <p class="rule-auto-range-info" id="rule-auto-range-crn"></p>
           <div class="table-scroll rule-table-scroll">
             <table class="rule-table">
               <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>
@@ -357,6 +358,7 @@
             <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('refurbish')">+ Add Row</button>
           </div>
           <p class="rule-card-desc">Define the models and grades eligible for Refurbish.</p>
+          <p class="rule-auto-range-info" id="rule-auto-range-refurbish"></p>
           <div class="table-scroll rule-table-scroll">
             <table class="rule-table">
               <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>
@@ -371,6 +373,7 @@
             <button class="btn btn-secondary rule-add-btn" onclick="addRuleRow('recycle')">+ Add Row</button>
           </div>
           <p class="rule-card-desc">Define the models and grades eligible for Recycle.</p>
+          <p class="rule-auto-range-info">ℹ️ Grade E is always Recycle-eligible for any model, regardless of this table (matches the base rule: not CRN/Refurbish + Grade E → Recycle). Use the table below only to allow additional grades for specific models.</p>
           <div class="table-scroll rule-table-scroll">
             <table class="rule-table">
               <thead><tr><th>Model Name Prefix</th><th>Applicable Grades</th><th></th></tr></thead>

@@ -61,6 +61,7 @@ function updateDashboard() {
   renderProgressBars(counts, total);
   renderCharts(counts, recs, total);
   renderModelTable(recs);
+  renderAutoRangeInfo();
   applyFilters();
 }
 
@@ -593,50 +594,96 @@ function buildErrorLogSheet(wb, colMap) {
   });
 }
 
-const RULE_SHEET_ROWS = [
-  { type: 'header', vals: ['규칙 번호', '분류', '조건 항목', '현재 값', '변경 방법 (Claude에게 전달할 내용)'] },
-  { type: 'section', vals: [null, '【 현재 적용 규칙 】', null, null, null] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'normal', vals: ['규칙 번호', '분류', '조건 항목', '현재 값', '변경 방법 (Claude에게 전달할 내용)'] },
-  { type: 'normal', vals: ['Rule 0', '할당 불가(Excluded)', 'B2B App. Y/N = Y인 경우 모든 배분 제외', 'Y → Excluded', "예) 'B2B 제외 조건을 삭제해줘' 또는 'B2B App 컬럼명이 바뀌었어, 새 컬럼명은 [컬럼명]이야'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 CRN 규칙 】', null, null, null] },
-  { type: 'normal', vals: ['Rule 1-A', 'CRN / Bar 타입', '대상 모델 세대', 'N-1 ~ N-3 (S25, S24, S23)', "예) 'CRN Bar 대상을 N-1 ~ N-4로 바꿔줘'"] },
-  { type: 'normal', vals: ['Rule 1-B', 'CRN / Bar 타입', '대상 등급', 'A, B, C, D (A+/B+/C+ 제외)', "예) 'CRN 등급에 A+도 포함해줘'"] },
-  { type: 'normal', vals: ['Rule 1-C', 'CRN / FF 타입', '대상 모델 세대', 'N ~ N-2 (FF7, FF6, FF5)', "예) 'CRN FF 대상을 N ~ N-3으로 바꿔줘'"] },
-  { type: 'normal', vals: ['Rule 1-D', 'CRN / FF 타입', '대상 등급', 'A, B, C, D (A+/B+/C+ 제외)', "예) 'CRN FF 등급 기준을 A, B만으로 좁혀줘'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 Refurbish 규칙 】', null, null, null] },
-  { type: 'normal', vals: ['Rule 2-A', 'Refurbish / Bar 타입', '대상 모델 세대', 'N ~ N-5 (S26, S25, S24, S23, S22, S21)', "예) 'Refurbish Bar 대상을 N ~ N-4로 줄여줘'"] },
-  { type: 'normal', vals: ['Rule 2-B', 'Refurbish / Bar 타입', '대상 등급', 'A+, B+, C+ 만 해당', "예) 'Refurbish 등급에 D+도 추가해줘'"] },
-  { type: 'normal', vals: ['Rule 2-C', 'Refurbish / FF 타입', '대상 모델 세대', 'N-1 ~ N-2 (FF6, FF5)', "예) 'Refurbish FF 대상을 N-1 ~ N-3으로 바꿔줘'"] },
-  { type: 'normal', vals: ['Rule 2-D', 'Refurbish / FF 타입', '대상 등급', 'A+, B+, C+ 만 해당', "예) 'Refurbish FF 등급 기준도 Bar와 동일하게 맞춰줘'"] },
-  { type: 'normal', vals: ['Rule 2-E', 'Refurbish / 예외', 'Note20 시리즈', "Market Name에 'Note20' 포함 시 무조건 Refurbish (등급 A+/B+/C+)", "예) 'Note20 예외 처리를 삭제해줘' 또는 'Note20 외에 Note10도 예외로 추가해줘'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 Recycle 규칙 】', null, null, null] },
-  { type: 'normal', vals: ['Rule 3', 'Recycle', '대상 등급', 'E 등급 (CRN·Refurbish 미해당 시)', "예) 'Recycle 기준을 D, E 등급으로 확대해줘'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 Auction 규칙 】', null, null, null] },
-  { type: 'normal', vals: ['Rule 4', 'Auction', '조건', '위 Rule 0~3에 해당하지 않는 모든 항목', '별도 변경 불필요 — 다른 규칙 변경 시 자동으로 범위 조정됨'] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 N-Model(최신 세대) 자동 감지 기준 】', null, null, null] },
-  { type: 'normal', vals: ['참고 1', 'N-Model 산출', '방식', '입력 엑셀의 Market Name / Model 컬럼에서 가장 높은 시리즈 번호를 N으로 자동 설정', '예) 현재 데이터에 S26이 있으면 N=26, N-1=25, N-2=24 … 로 계산'] },
-  { type: 'normal', vals: ['참고 2', 'Bar 타입 판별', '기준', "Market Name에 'Galaxy S' 또는 'Galaxy A' 포함", "예) 'A 시리즈도 Bar 타입 CRN에 포함해줘'"] },
-  { type: 'normal', vals: ['참고 3', 'FF 타입 판별', '기준', "Market Name에 'Fold', 'Flip', 'Z' 포함", "예) 'FF 판별 키워드에 Pocket도 추가해줘'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 등급(Grade) 정규화 기준 】', null, null, null] },
-  { type: 'normal', vals: ['참고 4', '등급 정규화', '매핑 테이블', 'A+/A/A- → A,  B+/B/B- → B,  C+/C/C- → C,  D+/D/D- → D,  E → E', "예) '등급 체계가 바뀌었어. F 등급이 추가됐고 Recycle 기준이야'"] },
-  { type: 'blank', vals: [null, null, null, null, null] },
-  { type: 'section', vals: [null, '【 배분 판정 우선순위 】', null, null, null] },
-  { type: 'normal', vals: ['참고 5', '판정 순서', '1순위 → 최종', '① Excluded(B2B=Y)  ②  CRN  ③ Refurbish  ④ Recycle(E등급)  ⑤ Auction', "예) 'Refurbish를 CRN보다 먼저 판정하도록 순서를 바꿔줘'"] }
-];
+const RULE_SHEET_HEADER = ['규칙 번호', '분류', '조건 항목', '현재 값', '변경 방법'];
+
+// Rule 탭 내용을 이 함수가 매번 실행 시점의 state.ruleConfig / state.nModels /
+// state.effectiveRuleTables에서 직접 생성한다 — 예전에는 이 시트가 고정 텍스트라
+// 실제 판정 로직(테이블 기반 규칙 + N-Model 자동 계산)이 바뀌어도 시트 내용이
+// 따라가지 못하는 문제가 있었다. 이제는 항상 "지금 실제로 적용된 규칙"을 그대로
+// 보여준다.
+function formatRuleRow(row) {
+  const grades = (row.grades || []).join(', ') || '(no grades)';
+  return `${row.prefix} → Grade: ${grades}`;
+}
+
+function buildRuleSheetRows() {
+  const nS = state.nModels && state.nModels.S;
+  const cfg = state.ruleConfig || DEFAULT_RULE_CONFIG;
+  const rows = [];
+  const blank = () => rows.push({ type: 'blank', vals: [null, null, null, null, null] });
+  const section = title => rows.push({ type: 'section', vals: [null, title, null, null, null] });
+  const normal = vals => rows.push({ type: 'normal', vals });
+
+  rows.push({ type: 'header', vals: RULE_SHEET_HEADER });
+  section('【 현재 적용 규칙 (실행 시점 기준) 】');
+  blank();
+  normal(RULE_SHEET_HEADER);
+  normal(['Rule 0', 'Excluded', 'B2B App. Y/N = Y인 경우 모든 배분 제외', 'Y → Excluded', 'Rule Management 탭에는 없음 (엔진 고정 로직)']);
+  blank();
+
+  section('【 CRN 규칙 】');
+  if (nS) {
+    const gens = BAR_S_CRN_OFFSETS.map(o => nS + o).filter(g => g > 0);
+    normal(['Rule 1-A', 'CRN / Bar (Galaxy S)', '대상 모델 세대 (자동 계산)', `N-1~N-3, 현재 N=S${nS} → ${gens.map(g => 'S'+g).join(', ')}`, '자동 계산 값 — 오프셋을 바꾸려면 allocation_engine.js의 BAR_S_CRN_OFFSETS 상수 수정 필요']);
+  } else {
+    normal(['Rule 1-A', 'CRN / Bar (Galaxy S)', '대상 모델 세대 (자동 계산)', 'N/A — 아직 실행 전 (Run Final Confirmation 후 표시됨)', '-']);
+  }
+  normal(['Rule 1-B', 'CRN / Bar (Galaxy S)', '대상 등급 (자동 계산)', BAR_S_CRN_GRADES.join(', '), 'allocation_engine.js의 BAR_S_CRN_GRADES 상수 수정 필요']);
+  (cfg.crn || []).forEach((row, i) => {
+    normal([`Rule 1-C-${i+1}`, 'CRN / 수동 예외 (Fold·Flip 등)', 'Model Name Prefix', formatRuleRow(row), 'Rule Management 탭 → CRN Eligible Models 표에서 직접 수정']);
+  });
+  if (!(cfg.crn || []).length) normal(['Rule 1-C', 'CRN / 수동 예외', '-', '(등록된 예외 모델 없음)', 'Rule Management 탭 → CRN Eligible Models 표에서 추가']);
+  blank();
+
+  section('【 Refurbish 규칙 】');
+  if (nS) {
+    const gens = BAR_S_REFURBISH_OFFSETS.map(o => nS + o).filter(g => g > 0);
+    normal(['Rule 2-A', 'Refurbish / Bar (Galaxy S)', '대상 모델 세대 (자동 계산)', `N~N-5, 현재 N=S${nS} → ${gens.map(g => 'S'+g).join(', ')}`, '자동 계산 값 — 오프셋을 바꾸려면 allocation_engine.js의 BAR_S_REFURBISH_OFFSETS 상수 수정 필요']);
+  } else {
+    normal(['Rule 2-A', 'Refurbish / Bar (Galaxy S)', '대상 모델 세대 (자동 계산)', 'N/A — 아직 실행 전 (Run Final Confirmation 후 표시됨)', '-']);
+  }
+  normal(['Rule 2-B', 'Refurbish / Bar (Galaxy S)', '대상 등급 (자동 계산)', BAR_S_REFURBISH_GRADES.join(', '), 'allocation_engine.js의 BAR_S_REFURBISH_GRADES 상수 수정 필요']);
+  (cfg.refurbish || []).forEach((row, i) => {
+    normal([`Rule 2-C-${i+1}`, 'Refurbish / 수동 예외 (Note20·Fold·Flip 등)', 'Model Name Prefix', formatRuleRow(row), 'Rule Management 탭 → Refurbish Eligible Models 표에서 직접 수정']);
+  });
+  if (!(cfg.refurbish || []).length) normal(['Rule 2-C', 'Refurbish / 수동 예외', '-', '(등록된 예외 모델 없음)', 'Rule Management 탭 → Refurbish Eligible Models 표에서 추가']);
+  blank();
+
+  section('【 Recycle 규칙 】');
+  normal(['Rule 3-A', 'Recycle / 기본 규칙 (모델 무관)', '대상 등급', 'E 등급 (CRN·Refurbish 미해당 시, 모델 상관없이 적용)', 'allocation_engine.js의 checkRecycle() 함수 내 normalizedGrade===\'E\' 조건 수정 필요']);
+  (cfg.recycle || []).forEach((row, i) => {
+    normal([`Rule 3-B-${i+1}`, 'Recycle / 추가 예외 (특정 모델에 E 외 등급도 허용)', 'Model Name Prefix', formatRuleRow(row), 'Rule Management 탭 → Recycle Eligible Models 표에서 직접 수정']);
+  });
+  if (!(cfg.recycle || []).length) normal(['Rule 3-B', 'Recycle / 추가 예외', '-', '(등록된 예외 모델 없음 — E등급 기본 규칙만 적용됨)', 'Rule Management 탭 → Recycle Eligible Models 표에서 추가']);
+  blank();
+
+  section('【 Auction 규칙 】');
+  normal(['Rule 4', 'Auction', '조건', '위 Rule 0~3에 해당하지 않는 모든 항목', '별도 변경 불필요 — 다른 규칙 변경 시 자동으로 범위 조정됨']);
+  blank();
+
+  section('【 N-Model(최신 세대) 자동 감지 기준 】');
+  normal(['참고 1', 'N-Model 산출', '방식', nS ? `현재 업로드 파일 기준 N = S${nS} (Market Name의 Galaxy S 세대 중 최댓값)` : '아직 실행 전 — 업로드 파일의 Market Name에서 Galaxy S 세대 중 최댓값을 자동 감지', 'Rule Management 탭이 아닌, 업로드하는 파일 데이터 자체가 기준']);
+  normal(['참고 2', 'Bar 타입 판별', '기준', "Market Name에 'Galaxy S' 또는 'Galaxy A' 포함", 'allocation_engine.js의 determineModelType() 수정 필요']);
+  normal(['참고 3', 'FF 타입 판별', '기준', "Market Name에 'Fold', 'Flip', 'Z' 포함", 'allocation_engine.js의 determineModelType() 수정 필요']);
+  blank();
+
+  section('【 등급(Grade) 정규화 기준 】');
+  normal(['참고 4', '등급 정규화', '매핑 테이블', 'A+/A/A- → A,  B+/B/B- → B,  C+/C/C- → C,  D+/D/D- → D,  E → E', 'allocation_engine.js의 GRADE_MAP 상수 수정 필요']);
+  blank();
+
+  section('【 배분 판정 우선순위 】');
+  normal(['참고 5', '판정 순서', '1순위 → 최종', '① Excluded(B2B=Y)  ②  CRN  ③ Refurbish  ④ Recycle  ⑤ Auction', 'allocation_engine.js의 applyRules() 함수 내 판정 순서 수정 필요']);
+
+  return rows;
+}
 
 function buildRuleSheet(wb) {
   const ws = wb.addWorksheet('Rule');
-  ws.columns = [{ width: 14 }, { width: 28 }, { width: 36 }, { width: 52 }, { width: 72 }];
+  ws.columns = [{ width: 14 }, { width: 30 }, { width: 30 }, { width: 60 }, { width: 60 }];
 
+  const ruleRows = buildRuleSheetRows();
   let toggle = false; // first non-special row = F5F5F5, then alternates
-  RULE_SHEET_ROWS.forEach((def, i) => {
+  ruleRows.forEach((def, i) => {
     const row = ws.addRow(def.vals);
     if (i > 0) row.height = 42;
 
@@ -940,6 +987,30 @@ const RULE_CATEGORIES = [
 
 function renderRuleTables() {
   RULE_CATEGORIES.forEach(cat => renderRuleTable(cat));
+  renderAutoRangeInfo();
+}
+
+// CRN/Refurbish의 Bar(Galaxy S) 세대 범위는 더 이상 이 표에서 수동으로
+// 관리하지 않는다 — 업로드된 파일에서 감지된 N-Model 기준 자동 계산이며,
+// 그 결과를 안내 배너로 보여준다. 아직 파일을 실행하지 않았다면 N을 알 수
+// 없으므로 안내 문구만 표시한다.
+function renderAutoRangeInfo() {
+  const nS = state.nModels && state.nModels.S;
+  const crnEl = document.getElementById('rule-auto-range-crn');
+  const rbEl = document.getElementById('rule-auto-range-refurbish');
+  if (!crnEl || !rbEl) return;
+
+  if (!nS) {
+    const msg = 'ℹ️ Bar (Galaxy S) generation range is auto-detected from the uploaded file\'s highest S-series number (N) — run "Run Final Confirmation" once to see the computed range. The table below only lists manual exceptions (Fold/Flip/Note models).';
+    crnEl.textContent = msg;
+    rbEl.textContent = msg;
+    return;
+  }
+
+  const crnGens = BAR_S_CRN_OFFSETS.map(o => nS + o).filter(g => g > 0);
+  const rbGens = BAR_S_REFURBISH_OFFSETS.map(o => nS + o).filter(g => g > 0);
+  crnEl.textContent = `ℹ️ Auto-detected N = S${nS}. Bar (Galaxy S) CRN range = N-1~N-3 → ${crnGens.map(g => 'S'+g).join(', ')}. The table below only lists manual exceptions (Fold/Flip models).`;
+  rbEl.textContent = `ℹ️ Auto-detected N = S${nS}. Bar (Galaxy S) Refurbish range = N~N-5 → ${rbGens.map(g => 'S'+g).join(', ')}. The table below only lists manual exceptions (Note20/Fold/Flip models).`;
 }
 
 function renderRuleTable(cat) {

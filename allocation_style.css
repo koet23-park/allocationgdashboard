@@ -579,6 +579,11 @@ tr.expanded td { background:rgba(99,102,241,.06); }
 .rule-card-header { display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .rule-card-title { font-size:.95rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
 .rule-card-desc { font-size:.8rem; color:var(--text3); margin:4px 0 12px 0; }
+.rule-auto-range-info {
+  font-size:.78rem; color:var(--text2, var(--text3));
+  background:rgba(100,150,255,.08); border:1px solid rgba(100,150,255,.25);
+  border-radius:6px; padding:8px 12px; margin:0 0 12px 0; line-height:1.5;
+}
 .rule-add-btn { font-size:.78rem; padding:6px 14px; }
 .rule-dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
 .rule-dot.cat-crn { background:var(--crn); }

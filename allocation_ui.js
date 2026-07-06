@@ -94,17 +94,20 @@ function renderProgressBars(counts, total) {
 // ============================================================
 // CHARTS
 // ============================================================
+// 대시보드 CSS 변수(--crn 등)와 동일한 톤다운된 팔레트를 사용한다.
+// 예전 값(#22c55e, #3b82f6 등)은 채도가 높고 알파도 낮아서(.7) 흰 배경 위에서
+// 파스텔처럼 흐리게 보였다.
 const COLORS = {
-  CRN:'#22c55e', Refurbish:'#3b82f6', Auction:'#f59e0b',
-  Recycle:'#ef4444', Excluded:'#a855f7', Unclassified:'#64748b'
+  CRN:'#16a34a', Refurbish:'#2563eb', Auction:'#d97706',
+  Recycle:'#dc2626', Excluded:'#7c3aed', Unclassified:'#64748b'
 };
 const COLORS_BG = {
-  CRN:'rgba(34,197,94,.7)', Refurbish:'rgba(59,130,246,.7)', Auction:'rgba(245,158,11,.7)',
-  Recycle:'rgba(239,68,68,.7)', Excluded:'rgba(168,85,247,.7)', Unclassified:'rgba(100,116,139,.7)'
+  CRN:'rgba(22,163,74,.85)', Refurbish:'rgba(37,99,235,.85)', Auction:'rgba(217,119,6,.85)',
+  Recycle:'rgba(220,38,38,.85)', Excluded:'rgba(124,58,237,.85)', Unclassified:'rgba(100,116,139,.85)'
 };
 
-Chart.defaults.color = '#94a3b8';
-Chart.defaults.borderColor = '#2e3248';
+Chart.defaults.color = '#4a5568';
+Chart.defaults.borderColor = '#e2e6ea';
 
 function renderCharts(counts, recs, total) {
   const labels = ['CRN','Refurbish','Auction','Recycle','Excluded','Unclassified'];
@@ -153,7 +156,7 @@ function renderCharts(counts, recs, total) {
     type:'bar',
     data:{
       labels: topModels.map(([k])=>k.replace('Galaxy ','').substring(0,18)),
-      datasets:[{ label:'Count', data:topModels.map(([,v])=>v), backgroundColor:'rgba(99,102,241,.7)', borderColor:'#6366f1', borderWidth:1 }]
+      datasets:[{ label:'Count', data:topModels.map(([,v])=>v), backgroundColor:'rgba(79,70,229,.85)', borderColor:'#4f46e5', borderWidth:1 }]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
@@ -175,7 +178,7 @@ function renderCharts(counts, recs, total) {
     type:'bar',
     data:{
       labels: gradeSorted.map(([k])=>k),
-      datasets:[{ label:'Count', data:gradeSorted.map(([,v])=>v), backgroundColor:'rgba(245,158,11,.7)', borderColor:'#f59e0b', borderWidth:1 }]
+      datasets:[{ label:'Count', data:gradeSorted.map(([,v])=>v), backgroundColor:'rgba(217,119,6,.85)', borderColor:'#d97706', borderWidth:1 }]
     },
     options:{
       responsive:true, maintainAspectRatio:false,

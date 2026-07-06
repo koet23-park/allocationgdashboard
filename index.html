@@ -14,8 +14,7 @@
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sidebar-logo">
-    <h2>Allocation v2</h2>
-    <p>IMEI Product Allocation System</p>
+    <h2>Contents</h2>
   </div>
   <div class="page-switcher">
     <button class="page-tab active" id="page-tab-dashboard" onclick="switchPage('dashboard')"><span class="nav-icon">📊</span>Dashboard</button>
@@ -38,7 +37,7 @@
 <div id="main">
   <div id="topbar">
     <div>
-      <div class="topbar-title">IMEI Product Allocation Dashboard</div>
+      <div class="topbar-title">Allocation System Dashboard</div>
       <div class="topbar-meta">Last processed: <span id="timestamp">—</span></div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
@@ -58,32 +57,36 @@
         <h2>📁 Data Upload</h2>
       </div>
       <div id="upload-body">
-        <div class="upload-zone" id="drop-zone">
-          <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json">
-          <div class="upload-icon">📂</div>
-          <h3>Drag & drop an Excel file here, or click to browse</h3>
-          <p>Supported formats: .xlsx, .xls, .csv, .json &nbsp;|&nbsp; IMEI, Market Name, Grade columns auto-detected</p>
-        </div>
+        <div class="upload-grid">
+          <div class="upload-zone" id="drop-zone">
+            <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json">
+            <div class="upload-icon">📂</div>
+            <h3>Drag & drop an Excel file here, or click to browse</h3>
+            <p>Supported formats: .xlsx, .xls, .csv, .json &nbsp;|&nbsp; IMEI, Market Name, Grade columns auto-detected</p>
+          </div>
 
-        <!-- Samsung DRM bypass -->
-        <div style="margin-top:12px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <div style="font-size:.82rem;color:var(--text2);flex:1;min-width:200px;">
-              <strong style="color:var(--accent);">🔒 For Samsung DRM-protected files</strong><br>
-              <span style="color:var(--text3);">Open file in Excel → Ctrl+A (select all) → Ctrl+C (copy) → click button below</span>
+          <div class="upload-side">
+            <!-- Samsung DRM bypass -->
+            <div class="upload-drm">
+              <div class="upload-drm-text">
+                <strong>🔒 For Samsung DRM-protected files</strong>
+                <span>Open file in Excel → Ctrl+A (select all) → Ctrl+C (copy) → click button below</span>
+              </div>
+              <button class="btn btn-success" onclick="pasteFromClipboard()" id="btn-paste">
+                📋 Paste from Clipboard
+              </button>
             </div>
-            <button class="btn btn-success" onclick="pasteFromClipboard()" id="btn-paste">
-              📋 Paste from Clipboard
-            </button>
+
+            <div id="run-bar">
+              <div id="file-label">No file selected</div>
+              <div class="run-bar-actions">
+                <button class="btn btn-primary" id="btn-run" disabled onclick="runAllocation()">▶ Run Final Confirmation</button>
+                <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">↺ Reset</button>
+              </div>
+            </div>
+            <div id="progress-wrap"><div id="progress-bar"></div></div>
           </div>
         </div>
-
-        <div id="run-bar">
-          <div id="file-label">No file selected</div>
-          <button class="btn btn-primary" id="btn-run" disabled onclick="runAllocation()">▶ Run Final Confirmation</button>
-          <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">↺ Reset</button>
-        </div>
-        <div id="progress-wrap"><div id="progress-bar"></div></div>
       </div>
     </section>
 

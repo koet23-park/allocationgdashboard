@@ -132,15 +132,25 @@ body {
 #upload-section {
   margin-bottom:24px;
 }
+.upload-grid {
+  display:grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap:16px;
+  align-items:stretch;
+}
 .upload-zone {
   border:2px dashed var(--border);
   border-radius:12px;
-  padding:36px;
+  padding:24px;
   text-align:center;
   background:var(--bg2);
   cursor:pointer;
   transition:all .2s;
   position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 .upload-zone:hover, .upload-zone.drag-over {
   border-color:var(--accent);
@@ -149,9 +159,32 @@ body {
 .upload-zone input[type=file] {
   position:absolute; inset:0; opacity:0; cursor:pointer;
 }
-.upload-icon { font-size:2.5rem; margin-bottom:10px; }
-.upload-zone h3 { font-size:1rem; margin-bottom:6px; }
-.upload-zone p { font-size:.8rem; color:var(--text3); }
+.upload-icon { font-size:2.2rem; margin-bottom:8px; }
+.upload-zone h3 { font-size:.95rem; margin-bottom:6px; }
+.upload-zone p { font-size:.78rem; color:var(--text3); }
+
+.upload-side {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.upload-drm {
+  padding:12px 14px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.upload-drm-text { font-size:.78rem; color:var(--text2); flex:1; min-width:160px; }
+.upload-drm-text strong { color:var(--accent); display:block; margin-bottom:3px; }
+.upload-drm-text span { color:var(--text3); }
+
+@media (max-width: 900px) {
+  .upload-grid { grid-template-columns: 1fr; }
+}
 .btn {
   display:inline-flex;
   align-items:center;
@@ -176,20 +209,29 @@ body {
 
 #run-bar {
   display:flex;
-  align-items:center;
-  gap:12px;
-  margin-top:14px;
-  flex-wrap:wrap;
+  flex-direction:column;
+  gap:10px;
+  padding:12px 14px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
 }
 #file-label {
   font-size:.82rem;
   color:var(--text2);
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:6px 14px;
+  font-weight:600;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.run-bar-actions {
+  display:flex;
+  gap:8px;
+}
+.run-bar-actions .btn {
   flex:1;
-  min-width:160px;
+  justify-content:center;
+  white-space:nowrap;
 }
 #progress-wrap {
   height:4px;

@@ -1,0 +1,255 @@
+SLIDE SIZE: 12192000 6858000 -> 13.333333333333334 7.5
+NUM SLIDES: 5
+
+===== SLIDE 1 (layout: 빈 화면) =====
+  [AUTO_SHAPE (1)] name='오각형 4' pos=(1.88,0.0) size=(11.43x7.5)
+  [AUTO_SHAPE (1)] name='오각형 5' pos=(0.01,0.0) size=(12.63x7.5)
+     fill: BACKGROUND_1 (14)
+  [AUTO_SHAPE (1)] name='직사각형 3' pos=(0.61,1.84) size=(11.04x0.91)
+     text='GVI-' font=Malgun Gothic size=609600 bold=True color=000000 align=CENTER (2)
+     text='품질운영 시스템 협의체' font=Malgun Gothic size=609600 bold=True color=000000 align=CENTER (2)
+  [AUTO_SHAPE (1)] name='직사각형 7' pos=(0.69,4.59) size=(9.66x1.18)
+     text=''' font=SamsungOneKorean 700 size=254000 bold=None color=None align=CENTER (2)
+     text='26. ' font=SamsungOneKorean 700 size=254000 bold=None color=None align=CENTER (2)
+     text='06' font=SamsungOneKorean 700 size=254000 bold=None color=None align=CENTER (2)
+     text='. 30' font=SamsungOneKorean 700 size=254000 bold=None color=None align=CENTER (2)
+     text='시스템 파트' font=SamsungOneKorean 700 size=304800 bold=True color=None align=CENTER (2)
+  [AUTO_SHAPE (1)] name='직사각형 1' pos=(12.5,7.14) size=(0.74x0.36)
+     fill: BACKGROUND_1 (14)
+
+===== SLIDE 2 (layout: 제목 및 내용) =====
+  [LINE (9)] name='직선 연결선 2' pos=(0.3,0.81) size=(12.58x0.0)
+     line color: 19264A
+     line width: 0
+  [TEXT_BOX (17)] name='TextBox 4' pos=(0.28,0.14) size=(12.3x0.64)
+     text='목차' font=SamsungOneKorean 700 size=405384 bold=True color=None align=None
+  [TEXT_BOX (17)] name='TextBox 6' pos=(1.35,1.39) size=(10.84x4.25)
+     text='Agenda' font=SamsungOneKorean 500 size=406400 bold=True color=None align=None
+     text=':' font=SamsungOneKorean 500 size=406400 bold=True color=None align=None
+     text='① ' font=SamsungOneKorean 500 size=406400 bold=True color=None align=None
+     text='독일' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text=' 반품 현황 추가 점검결과 보고' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text='② ' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text='자재 운영 대시보드 ' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text='(' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text='개인화 대시보드 발표' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+     text=')' font=맑은 고딕 size=406400 bold=True color=000000 align=None
+
+===== SLIDE 3 (layout: 제목 슬라이드) =====
+  [LINE (9)] name='직선 연결선 32' pos=(0.3,0.81) size=(12.58x0.0)
+     line color: 19264A
+     line width: 0
+  [TEXT_BOX (17)] name='TextBox 42' pos=(0.44,1.38) size=(5.41x0.37)
+     text=' GVI Portal ' font=SamsungOneKorean 500 size=203200 bold=False color=None align=LEFT (1)
+     text='누적 반품 ' font=SamsungOneKorean 500 size=203200 bold=False color=None align=LEFT (1)
+     text=': ' font=SamsungOneKorean 500 size=203200 bold=False color=None align=LEFT (1)
+     text='등급 변경이 발생한 건의 누적' font=SamsungOneKorean 500 size=203200 bold=False color=None align=LEFT (1)
+  [AUTO_SHAPE (1)] name='직사각형 2' pos=(0.33,1.4) size=(0.1x0.33)
+     fill: 165675
+     line color: 165675
+     line width: 0
+  [AUTO_SHAPE (1)] name='AutoShape 208' pos=(1.81,4.69) size=(2.51x0.23)
+     fill: BACKGROUND_1 (14)
+     text='[GVI Portal Mobile ' font=SamsungOneKorean 500 size=177800 bold=True color=None align=CENTER (2)
+     text='반품 건수' font=SamsungOneKorean 500 size=177800 bold=True color=None align=CENTER (2)
+     text=']' font=SamsungOneKorean 500 size=177800 bold=True color=None align=CENTER (2)
+  [AUTO_SHAPE (1)] name='직사각형 73' pos=(0.33,2.56) size=(0.92x0.48)
+     fill: BACKGROUND_1 (14)
+     text='① 반품입고' font=SamsungOneKorean 500C size=139700 bold=False color=0000CC align=CENTER (2)
+     text='(A' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text='등급' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text=')' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+  [AUTO_SHAPE (1)] name='순서도: 판단 74' pos=(1.62,2.48) size=(1.33x0.68)
+     fill: BACKGROUND_1 (14)
+     text='개봉' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text='확인' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+  [AUTO_SHAPE (1)] name='순서도: 판단 75' pos=(3.3,2.48) size=(1.33x0.68)
+     fill: BACKGROUND_1 (14)
+     text='등급' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text='판정' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+  [LINE (9)] name='직선 화살표 연결선 76' pos=(1.26,2.81) size=(0.37x0.01)
+  [LINE (9)] name='직선 화살표 연결선 77' pos=(2.96,2.81) size=(0.35x0.01)
+  [LINE (9)] name='꺾인 연결선 74' pos=(3.4,2.05) size=(0.56x2.78)
+  [LINE (9)] name='꺾인 연결선 74' pos=(4.46,2.67) size=(0.12x1.1)
+  [TEXT_BOX (17)] name='TextBox 80' pos=(2.29,3.48) size=(1.57x0.27)
+     text='박스 미개봉 ' font=SamsungOneKorean 500C size=127000 bold=False color=0000FF align=LEFT (1)
+  [TEXT_BOX (17)] name='TextBox 81' pos=(2.8,2.58) size=(0.73x0.27)
+     text='박스 개봉' font=SamsungOneKorean 500C size=127000 bold=False color=0000FF align=LEFT (1)
+  [TEXT_BOX (17)] name='TextBox 82' pos=(4.31,3.03) size=(1.25x0.27)
+     text='Grading' font=SamsungOneKorean 500C size=127000 bold=False color=0000FF align=LEFT (1)
+  [AUTO_SHAPE (1)] name='직사각형 83' pos=(5.07,3.08) size=(1.25x0.41)
+     fill: BACKGROUND_1 (14)
+     text='② 등급조정' font=SamsungOneKorean 500C size=139700 bold=False color=0000CC align=CENTER (2)
+     text='(B/C/D/R' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text='등급' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text=')' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+  [AUTO_SHAPE (1)] name='직사각형 84' pos=(5.07,3.54) size=(1.25x0.36)
+     fill: BACKGROUND_1 (14)
+     text='등급유지' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+     text='(A)' font=SamsungOneKorean 500C size=139700 bold=False color=None align=CENTER (2)
+  [TEXT_BOX (17)] name='TextBox 85' pos=(0.09,0.21) size=(13.24x0.55)
+     text='1. ' font=SamsungOneKorean 500 size=304800 bold=None color=None align=None
+     text='독일 반품 현황 추가 점검결과 보고' font=SamsungOneKorean 500 size=304800 bold=True color=000000 align=None
+  [TABLE (19)] name='표 7' pos=(0.97,5.1) size=(3.97x1.45)
+  [AUTO_SHAPE (1)] name='직사각형 88' pos=(2.18,5.53) size=(2.76x0.35)
+     line color: FF0000
+     line width: 28575
+  [TEXT_BOX (17)] name='TextBox 30' pos=(6.93,1.3) size=(6.16x0.64)
+     text='등급 판정 프로세스 통해 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='RDU ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='물량 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='ERP ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='입고 처리 하고 있음' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='→' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text=' 누적 반품에 ' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=LEFT (1)
+     text='RDU ' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=LEFT (1)
+     text='물량이 포함 되어 보임' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=LEFT (1)
+  [TABLE (19)] name='표 31' pos=(7.14,2.58) size=(4.52x3.19)
+  [TEXT_BOX (17)] name='TextBox 33' pos=(6.99,5.89) size=(3.66x0.3)
+     text='□' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text=' RDU ' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text='제외 시' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text=', ' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text='누적 반품 수량' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+  [TABLE (19)] name='표 34' pos=(7.14,6.18) size=(5.14x1.0)
+  [TEXT_BOX (17)] name='TextBox 35' pos=(8.5,1.87) size=(3.22x0.3)
+     text='※ Qty : 20,545ea' font=SamsungOneKorean 500 size=152400 bold=None color=0000CC align=None
+  [TEXT_BOX (17)] name='TextBox 36' pos=(7.05,2.28) size=(3.66x0.3)
+     text='□' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text=' SEG RDU ' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+     text='물량' font=SamsungOneKorean 500 size=152400 bold=True color=000000 align=LEFT (1)
+  [LINE (9)] name='직선 연결선 4' pos=(6.54,1.3) size=(0.0x6.04)
+  [AUTO_SHAPE (1)] name='직사각형 2' pos=(6.85,1.35) size=(0.1x0.33)
+     fill: 165675
+     line color: 165675
+     line width: 0
+  [AUTO_SHAPE (1)] name='직사각형 41' pos=(4.31,2.95) size=(2.08x0.56)
+     line color: FF0000
+     line width: 28575
+  [TEXT_BOX (17)] name='TextBox 46' pos=(2.44,1.67) size=(2.34x0.3)
+     text='*A ' font=SamsungOneKorean 500 size=152400 bold=False color=0000CC align=None
+     text='→' font=SamsungOneKorean 500 size=152400 bold=False color=0000CC align=None
+     text=' B/C/D/R ' font=SamsungOneKorean 500 size=152400 bold=False color=0000CC align=None
+     text='등급 변환' font=SamsungOneKorean 500 size=152400 bold=False color=0000CC align=None
+
+===== SLIDE 4 (layout: 제목 슬라이드) =====
+  [TEXT_BOX (17)] name='TextBox 22' pos=(0.47,0.99) size=(11.83x0.37)
+     text='SEG' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='는 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='RDU' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='를 초기부터 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='ERP' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='상 재고화 관리 하고 있음' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+     text='. ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=LEFT (1)
+  [LINE (9)] name='직선 연결선 24' pos=(0.3,0.81) size=(12.58x0.0)
+     line color: 19264A
+     line width: 0
+  [AUTO_SHAPE (1)] name='직사각형 2' pos=(0.3,1.01) size=(0.1x0.33)
+     fill: 165675
+     line color: 165675
+     line width: 0
+  [PICTURE (13)] name='그림 2' pos=(0.72,1.85) size=(8.35x4.78)
+  [AUTO_SHAPE (1)] name='직사각형 3' pos=(0.72,4.64) size=(1.82x1.93)
+     line color: FF0000
+     line width: 28575
+  [AUTO_SHAPE (1)] name='직사각형 26' pos=(3.14,3.08) size=(1.68x0.67)
+     line color: FF0000
+     line width: 28575
+  [TEXT_BOX (17)] name='TextBox 29' pos=(0.63,6.71) size=(6.24x0.71)
+     text='-' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text=' SEUK : 무상 입고 처리(' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='RB SKU' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='로 입고 처리' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text=', S/L WBLB' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='으로 입고)' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='- ' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='SEF : FOC' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='(Free of Charge)' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text=' PO 기반 입고 처리(' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='RB SKU' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='로 입고 처리' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text=', S/L WS06' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='으로 입고)' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text=' - SEA : ERP' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='처리 하지 않음 ' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='(' font=SamsungOneKorean 500 size=152400 bold=None color=None align=None
+     text='GroupO' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+     text='에서 수거 → ' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+     text='서큐텍에서' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+     text='Triage ' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+     text='→ 옥션 매각' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+     text=')' font=SamsungOneKorean 500 size=152400 bold=None color=000000 align=None
+  [TEXT_BOX (17)] name='TextBox 33' pos=(0.09,0.21) size=(13.24x0.55)
+     text='1. ' font=SamsungOneKorean 500 size=304800 bold=None color=None align=None
+     text='독일 반품 현황 추가 점검결과 보고' font=SamsungOneKorean 500 size=304800 bold=True color=000000 align=None
+  [TEXT_BOX (17)] name='TextBox 35' pos=(0.63,1.35) size=(9.67x0.37)
+     text='→ ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text='법인  입고 시' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=None
+     text=', ' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=None
+     text='반품 입고 및 등급 판정 처리 ' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=None
+     text='(' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=None
+     text=' 이후 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text='RB SKU' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text='로 전환' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text=',' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text=' 재고가 ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text='‘0’ ' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text='으로 사후 매뉴얼 반영' font=SamsungOneKorean 500 size=203200 bold=None color=000000 align=None
+     text=')' font=SamsungOneKorean 500 size=203200 bold=False color=000000 align=None
+  [AUTO_SHAPE (1)] name='타원 1' pos=(4.9,3.15) size=(0.48x0.42)
+     line color: FF0000
+     line width: 19050
+  [AUTO_SHAPE (1)] name='타원 11' pos=(4.29,3.72) size=(0.48x0.42)
+     line color: FF0000
+     line width: 19050
+
+===== SLIDE 5 (layout: 제목 슬라이드) =====
+  [LINE (9)] name='직선 연결선 32' pos=(0.3,0.81) size=(12.58x0.0)
+     line color: 19264A
+     line width: 0
+  [PICTURE (13)] name='그림 5' pos=(0.3,2.03) size=(12.58x3.86)
+     line color: 165675
+     line width: 0
+  [AUTO_SHAPE (1)] name='직사각형 2' pos=(0.29,1.26) size=(0.1x0.33)
+     fill: 165675
+     line color: 165675
+     line width: 0
+  [TEXT_BOX (17)] name='TextBox 24' pos=(0.37,1.22) size=(12.94x0.37)
+     text='Solution: SEG' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='의 ' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='RDU ' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='입고 창고인 ' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='WR20' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='을 누적 반품 ' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='Count' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+     text='에서 제외 하여 해결 예정' font=SamsungOneKorean 500 size=203200 bold=None color=None align=LEFT (1)
+  [AUTO_SHAPE (1)] name='직사각형 6' pos=(4.12,3.59) size=(1.24x0.51)
+     line color: FF0000
+     line width: 38100
+  [AUTO_SHAPE (1)] name='직사각형 25' pos=(7.39,3.59) size=(1.24x0.51)
+     line color: FF0000
+     line width: 38100
+  [LINE (9)] name='연결선: 꺾임 2' pos=(8.16,3.13) size=(0.3x0.62)
+  [LINE (9)] name='연결선: 꺾임 20' pos=(4.36,3.21) size=(0.28x0.48)
+  [AUTO_SHAPE (1)] name='직사각형 27' pos=(8.62,3.07) size=(3.93x0.44)
+     text='RDU ' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='수거 업체의 입수 현황 데이터 ' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='(Data lake ' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='업로드' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text=')' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+  [AUTO_SHAPE (1)] name='직사각형 30' pos=(0.33,3.09) size=(3.93x0.44)
+     text='ERP' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='상 반품 입고 후' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text=', ' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='등급 변경' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='(A' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='등급 →' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='B/C/D/R' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='등급' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text=')' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+     text='된 데이터의 누적 현황' font=SamsungOneKorean 500 size=152400 bold=False color=None align=LEFT (1)
+  [TEXT_BOX (17)] name='TextBox 38' pos=(0.09,0.21) size=(13.24x0.55)
+     text='1. ' font=SamsungOneKorean 500 size=304800 bold=None color=None align=None
+     text='독일 반품 현황 추가 점검결과 보고' font=SamsungOneKorean 500 size=304800 bold=True color=000000 align=None
+  [TEXT_BOX (17)] name='TextBox 15' pos=(6.95,1.52) size=(1.88x0.3)
+     text='＊소요 시간 확인 중' font=SamsungOneKorean 500 size=152400 bold=None color=0000CC align=None

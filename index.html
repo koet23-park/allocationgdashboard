@@ -7,7 +7,7 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
-<link rel="stylesheet" href="allocation_style.css?v=3">
+<link rel="stylesheet" href="allocation_style.css?v=4">
 </head>
 <body>
 
@@ -57,36 +57,30 @@
         <h2>📁 Data Upload</h2>
       </div>
       <div id="upload-body">
-        <div class="upload-grid">
-          <div class="upload-zone" id="drop-zone">
-            <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json">
-            <div class="upload-icon">📂</div>
-            <h3>Drag & drop an Excel file here, or click to browse</h3>
-            <p>Supported formats: .xlsx, .xls, .csv, .json &nbsp;|&nbsp; IMEI, Market Name, Grade columns auto-detected</p>
-          </div>
-
-          <div class="upload-side">
-            <!-- Samsung DRM bypass -->
-            <div class="upload-drm">
-              <div class="upload-drm-text">
-                <strong>🔒 For Samsung DRM-protected files</strong>
-                <span>Open file in Excel → Ctrl+A (select all) → Ctrl+C (copy) → click button below</span>
-              </div>
-              <button class="btn btn-success" onclick="pasteFromClipboard()" id="btn-paste">
-                📋 Paste from Clipboard
-              </button>
-            </div>
-
-            <div id="run-bar">
-              <div id="file-label">No file selected</div>
-              <div class="run-bar-actions">
-                <button class="btn btn-primary" id="btn-run" disabled onclick="runAllocation()">▶ Run Final Confirmation</button>
-                <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">↺ Reset</button>
-              </div>
-            </div>
-            <div id="progress-wrap"><div id="progress-bar"></div></div>
-          </div>
+        <div class="upload-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json">
+          <div class="upload-icon">📂</div>
+          <h3>Drag & drop a JSON file or non-DRM Excel file here, or click to browse</h3>
+          <p>Supported formats: .json, .xlsx, .xls, .csv</p>
         </div>
+
+        <!-- Samsung DRM bypass -->
+        <div class="upload-drm">
+          <div class="upload-drm-text">
+            <strong>🔒 For Samsung DRM-protected files</strong>
+            <span>Open file in Excel → Ctrl+A (select all) → Ctrl+C (copy) → click button below</span>
+          </div>
+          <button class="btn btn-success" onclick="pasteFromClipboard()" id="btn-paste">
+            📋 Paste from Clipboard
+          </button>
+        </div>
+
+        <div id="run-bar">
+          <div id="file-label">No file selected</div>
+          <button class="btn btn-primary" id="btn-run" disabled onclick="runAllocation()">▶ Run Final Confirmation</button>
+          <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">↺ Reset</button>
+        </div>
+        <div id="progress-wrap"><div id="progress-bar"></div></div>
       </div>
     </section>
 
@@ -402,7 +396,7 @@
   </div><!-- /content -->
 </div><!-- /main -->
 
-<script src="allocation_engine.js?v=3"></script>
-<script src="allocation_ui.js?v=3"></script>
+<script src="allocation_engine.js?v=4"></script>
+<script src="allocation_ui.js?v=4"></script>
 </body>
 </html>

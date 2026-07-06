@@ -529,17 +529,8 @@ function buildMainDataSheet(wb, colMap, rawHeaders) {
   const ws = wb.addWorksheet('Main_Data');
   const imeiKey = colMap.imei;
 
-  let headers;
-  if (imeiKey && rawHeaders.includes(imeiKey)) {
-    headers = [];
-    for (const h of rawHeaders) {
-      headers.push(h);
-      if (h === imeiKey) headers.push('Allocation Result');
-    }
-  } else {
-    headers = ['Allocation Result', ...rawHeaders];
-  }
-  headers.push('Reason');
+  // Allocation Result는 맨 마지막 컬럼으로 출력한다 (Reason도 그 앞에 위치).
+  const headers = [...rawHeaders, 'Reason', 'Allocation Result'];
 
   ws.addRow(headers);
 
@@ -558,6 +549,21 @@ function buildMainDataSheet(wb, colMap, rawHeaders) {
     const imeiColIdx = headers.indexOf(imeiKey) + 1;
     if (imeiColIdx > 0) {
       ws.getColumn(imeiColIdx).eachCell({ includeEmpty: false }, cell => { cell.numFmt = '@'; });
+    }
+  }
+
+  // Allocation Result 컬럼 볼드 처리 (Python 결과 엑셀과 동일한 스타일 —
+  // 헤더는 검정 배경에 흰 굵은 글씨, 데이터는 굵은 글씨).
+  // lastIndexOf를 쓰는 이유: 원본 데이터에 'Allocation Result' 컬럼이 이미
+  // 있는 경우(예: Python 결과 파일을 다시 업로드) 방금 맨 끝에 추가한
+  // 컬럼이 아니라 그 이전 컬럼을 잘못 집을 수 있기 때문.
+  const allocColIdx = headers.lastIndexOf('Allocation Result') + 1;
+  if (allocColIdx > 0) {
+    const headerCell = ws.getRow(1).getCell(allocColIdx);
+    headerCell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF000000' } };
+    for (let r = 2; r <= ws.rowCount; r++) {
+      ws.getRow(r).getCell(allocColIdx).font = { bold: true };
     }
   }
 }
